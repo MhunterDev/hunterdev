@@ -61,7 +61,7 @@ func AuthHash(hash, password string) error {
 }
 
 func MakeSecret() error {
-	filename := "/usr/pgrlib/secret/keychain/secret.pem"
+	filename := "/usr/lib/mhdev/keychain/secret.pem"
 	data := "host=10.0.0.45 port=5432 user=pg password=pgrunner11 database=postgres sslmode=require"
 	// Create or open the file
 	file, err := os.Create(filename)
@@ -87,7 +87,7 @@ func MakeSecret() error {
 }
 
 func GetConn() (string, error) {
-	filename := "/usr/pgrlib/keychain/secret.pem"
+	filename := "/usr/lib/mhdev/keychain/secret.pem"
 	// Read the entire file
 	fileData, err := os.ReadFile(filename)
 	if err != nil {
@@ -107,8 +107,8 @@ func GetConn() (string, error) {
 }
 
 func GenerateHTTPS() error {
-	var certPath = "/usr/pgrlib/keychain/tls/CA.crt"
-	var keyPath = "/usr/pgrlib/keychain/tls/secret/CA.key"
+	var certPath = "/usr/lib/mhdev/keychain/tls/CA.crt"
+	var keyPath = "/usr/lib/mhdev/keychain/tls/secret/CA.key"
 	var validityDays = 10000
 	priv, err := ecdsa.GenerateKey(elliptic.P384(), rand.Reader)
 	if err != nil {

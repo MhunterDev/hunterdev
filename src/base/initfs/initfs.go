@@ -11,22 +11,22 @@ import (
 func BuildFS() error {
 
 	// Build Logging directories
-	os.MkdirAll("/usr/mhdev/logs", 077)
-	os.Create("/usr/mhdev/logs/Install.log")
-	os.Create("/usr/mhdev/logs/Base-processes.log")
-	os.Create("/usr/mhdev/logs/pgrunner.log")
+	os.MkdirAll("/usr/lib/mhdev/logs", 077)
+	os.Create("/usr/lib/mhdev/logs/Install.log")
+	os.Create("/usr/lib/mhdev/logs/Base-processes.log")
+	os.Create("/usr/lib/mhdev/logs/pgrunner.log")
 	logsalot.LogInit("Log directories")
 	time.Sleep(1 * time.Second)
 
 	//Build the Keychains
-	err := os.MkdirAll("/usr/mhdev/keychain/tls/secret", 077)
+	err := os.MkdirAll("/usr/lib/mhdev/keychain/tls/secret", 077)
 	if err != nil {
 		return err
 	}
 
-	os.Create("/usr/mhdev/keychain/tls/secret/CA.key")
-	os.Create("/usr/mhdev/keychain/tls/CA.crt")
-	os.Create("/usr/mhdev/keychain/secret.pem")
+	os.Create("/usr/lib/mhdev/keychain/tls/secret/CA.key")
+	os.Create("/usr/lib/mhdev/keychain/tls/CA.crt")
+	os.Create("/usr/lib/mhdev/keychain/secret.pem")
 	logsalot.LogInit("Keychain")
 	time.Sleep(1 * time.Second)
 
