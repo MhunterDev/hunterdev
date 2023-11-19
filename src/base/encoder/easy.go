@@ -62,7 +62,7 @@ func AuthHash(hash, password string) error {
 
 func MakeSecret() error {
 	filename := "/usr/pgrlib/secret/keychain/secret.pem"
-	data := "host=192.168.50.162 port=5432 user=pg password=pgrunner11 database=postgres sslmode=require"
+	data := "host=10.0.0.45 port=5432 user=pg password=pgrunner11 database=postgres sslmode=require"
 	// Create or open the file
 	file, err := os.Create(filename)
 	if err != nil {
