@@ -157,12 +157,12 @@ func GenerateHTTPS() error {
 	}
 	defer keyFile.Close()
 
-	privBytes, err := x509.MarshalECPrivateKey(priv)
+	privBytes, err := x509.MarshalPKCS8PrivateKey(priv)
 	if err != nil {
 		return err
 	}
 
-	err = pem.Encode(keyFile, &pem.Block{Type: "EC PRIVATE KEY", Bytes: privBytes})
+	err = pem.Encode(keyFile, &pem.Block{Type: "PRIVATE KEY", Bytes: privBytes})
 	if err != nil {
 		return err
 	}
