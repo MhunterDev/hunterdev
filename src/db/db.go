@@ -11,6 +11,11 @@ import (
 
 var connString, connErr = easy.GetConn()
 
+type User struct {
+	Username string `json:"username" form:"username" binding:"required"`
+	Password string `json:"password" form:"password" binding:"required"`
+}
+
 func AddDefault() error {
 	db, err := sql.Open("postgres", connString)
 	if err != nil {
@@ -41,4 +46,40 @@ func AddDefault() error {
 	db.Exec(finalHash)
 
 	return nil
+}
+
+func AuthUser(u User) error {
+
+	var baseQuery = "SELECT token FROM app.users WHERE username=%s"
+	var addUserToQuery = fmt.Sprintf("'%s'", u.Username)
+	var fullyFormatted = fmt.Sprintf(baseQuery, addUserToQuery)
+
+	db, err := sql.Open("postgres", connString)
+	if err != nil {
+		logsalot.DbErr(err)
+		return err
+	}
+	defer db.Close()
+	rows, err := db.Query(fullyFormatted)
+	if err != nil {
+		logsalot.DbErr(err)
+		return err
+	}
+
+	var token string
+	for rows.Next() {
+		rows.Scan(&token)
+	}
+
+	var authQuery = "SELECT hash FROM app.secrets WHERE token=%s"
+	var addToken = fmt.Sprintf("'%s'", token)
+	var hashQuery = fmt.Sprintf(authQuery, addToken)
+
+	row := db.QueryRow(hashQuery)
+
+	var h string
+	row.Scan(&h)
+
+	return easy.AuthHash(h, u.Password)
+
 }

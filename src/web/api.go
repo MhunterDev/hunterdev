@@ -1,24 +1,34 @@
 package api
 
 import (
-	"html/template"
+	"net/http"
 
 	logsalot "github.com/MhunterDev/hunterdev/src/base/logs"
-	"github.com/gin-gonic/gin"
+	db "github.com/MhunterDev/hunterdev/src/db"
+	"github.com/gofiber/fiber/v2"
 )
 
-func handleHome(c *gin.Context) {
-	template, err := template.ParseFiles(".public/welcome.html")
-	if err != nil {
-		logsalot.ApiErr(err)
+func handleHome(c *fiber.Ctx) error {
+	return c.Render("/workspaces/hunterdev/src/web/.public/html/welcome.html", fiber.Map{}, "html")
+}
+
+func handleAuth(c *fiber.Ctx) error {
+	var u db.User
+	c.BodyParser(&u)
+	if db.AuthUser(u) != nil {
+		c.Redirect("/", http.StatusForbidden)
 	}
-	template.Execute(c.Writer, nil)
+	return c.Render("/workspaces/hunterdev/src/web/.public/html/home.html", fiber.Map{}, "html")
 }
 
 func Router() {
-	router := gin.Default()
 
-	router.GET("/", handleHome)
+	router := fiber.New()
+	router.Get("/", handleHome)
 
-	router.RunTLS(":80", "/usr/lib/mhdev/keychain/tls/CA.crt", "/usr/lib/mhdev/keychain/tls/secret/CA.key")
+	err := router.ListenTLS(":80", "/usr/lib/mhdev/keychain/tls/CA.crt", "/usr/lib/mhdev/keychain/tls/secret/CA.key")
+	if err != nil {
+		logsalot.ApiErr(err)
+		return
+	}
 }
